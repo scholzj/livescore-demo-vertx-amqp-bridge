@@ -1,4 +1,4 @@
-package com.effectivemessaging.blog;
+package cz.scholz.demo.vertx;
 
 import cz.scholz.demo.livescore.Game;
 import cz.scholz.demo.livescore.InvalidGameException;
@@ -14,8 +14,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Created by schojak on 10.1.17.
