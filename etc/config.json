@@ -1,0 +1,8 @@
+{
+  "amqp": {
+    "hostname": "localhost",
+    "port": 5672,
+    "idleTimeout": 60,
+    "connectionTimeout": 5000
+  }
+}

@@ -26,14 +26,19 @@ public class LiveScore extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> fut) {
-        AmqpBridgeOptions options = new AmqpBridgeOptions().setIdleTimeout(60).setConnectTimeout(10000).addEnabledSaslMechanism("ANONYMOUS");
+        String amqpHostname = config().getJsonObject("amqp", new JsonObject()).getString("hostname", "localhost");
+        Integer amqpPort = config().getJsonObject("amqp", new JsonObject()).getInteger("port", 5672);
+        Integer amqpIdleTimeout = config().getJsonObject("amqp", new JsonObject()).getInteger("idleTimeout", 60);
+        Integer amqpConnectionTimeout = config().getJsonObject("amqp", new JsonObject()).getInteger("connectionTimeout", 5000);
+
+        AmqpBridgeOptions options = new AmqpBridgeOptions().setIdleTimeout(amqpIdleTimeout).setConnectTimeout(amqpConnectionTimeout).addEnabledSaslMechanism("ANONYMOUS");
 
         bridge = AmqpBridge.create(vertx, options);
 
-        bridge.start("localhost", 5672, res -> {
+        bridge.start(amqpHostname, amqpPort, res -> {
             if (res.succeeded())
             {
-                LOG.info("Connected to the AMQP server");
+                LOG.info("Connected to the AMQP router");
 
                 // Broadcasting live updates as they occur
                 broadcaster = bridge.createProducer("liveUpdates");
