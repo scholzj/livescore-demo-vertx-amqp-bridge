@@ -147,27 +147,27 @@ In case of success:
 You can use the qpid-send and qpid-receive utilities from Apache Qpid project to communicate with the service from the command line:
 
 * Create a new game
-```
+```bash
 qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/addGame'" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "startTime": "14th January 2017, 17:30"}'
 
 ```
 
 * Update the score
-```
+```bash
 qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/setScore'" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "homeTeamGoals": 1, "awayTeamGoals": 0, "gameTime": "13"}'
 qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/setScore'" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "homeTeamGoals": 2, "awayTeamGoals": 0, "gameTime": "35"}'
 
 ```
 
 * Get scores
-```
-$ qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "myReplyToAddress" -m 1 -f --print-headers yes &
-$ qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/getScores'" --content-string '{}' --reply-to "myReplyToAddress"
+```bash
+qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "myReplyToAddress" -m 1 -f --print-headers yes &
+qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/getScores'" --content-string '{}' --reply-to "myReplyToAddress"
 
 ```
 
 * Subscribe to live updates
-```
+```bash
 qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/liveUpdates'" -f
 
 ```
