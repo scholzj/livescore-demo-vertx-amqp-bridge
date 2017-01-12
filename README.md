@@ -16,7 +16,7 @@ To send a request, send the message to the specific AMQP address. If reply-to ad
 
 #### Request
 
-* Send a message to endpoint LiveScore/addGame
+* Send a message to endpoint addGame
 * The message payload should be in JSON format:
 ```json
 {
@@ -56,7 +56,7 @@ In case of problems:
 
 #### Request
 
-* Send a message to endpoint LiveScore/setScore
+* Send a message to endpoint setScore
 * The message payload should be in JSON format:
 ```json
 {
@@ -98,7 +98,7 @@ In case of problems:
 
 #### Request
 
-* Send a message to endpoint LiveScore/getScores
+* Send a message to endpoint getScores
 * The message payload should be empty
 
 #### Response
@@ -124,7 +124,7 @@ In case of success:
 
 #### Subscribe
 
-* To subscribe to live score updates, connect a receiver to LiveScore/liveUpdates
+* To subscribe to live score updates, connect a receiver to liveUpdates
 
 #### Broadcasts
 
@@ -148,26 +148,26 @@ You can use the qpid-send and qpid-receive utilities from Apache Qpid project to
 
 * Create a new game
 ```bash
-qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/addGame'" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "startTime": "14th January 2017, 17:30"}'
+qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "addGame" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "startTime": "14th January 2017, 17:30"}'
 
 ```
 
 * Update the score
 ```bash
-qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/setScore'" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "homeTeamGoals": 1, "awayTeamGoals": 0, "gameTime": "13"}'
-qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/setScore'" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "homeTeamGoals": 2, "awayTeamGoals": 0, "gameTime": "35"}'
+qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "setScore" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "homeTeamGoals": 1, "awayTeamGoals": 0, "gameTime": "13"}'
+qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "setScore" --content-string '{"homeTeam": "Aston Villa", "awayTeam": "Preston North End", "homeTeamGoals": 2, "awayTeamGoals": 0, "gameTime": "35"}'
 
 ```
 
 * Get scores
 ```bash
 qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "myReplyToAddress" -m 1 -f --print-headers yes &
-qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/getScores'" --content-string '{}' --reply-to "myReplyToAddress"
+qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "getScores" --content-string '{}' --reply-to "myReplyToAddress"
 
 ```
 
 * Subscribe to live updates
 ```bash
-qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'LiveScore/liveUpdates'" -f
+qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "liveUpdates" -f
 
 ```

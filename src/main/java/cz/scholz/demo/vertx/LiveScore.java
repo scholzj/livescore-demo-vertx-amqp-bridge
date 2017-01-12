@@ -36,17 +36,17 @@ public class LiveScore extends AbstractVerticle {
                 LOG.info("Connected to the AMQP server");
 
                 // Broadcasting live updates as they occur
-                broadcaster = bridge.createProducer("LiveScore/liveUpdates");
+                broadcaster = bridge.createProducer("liveUpdates");
                 scoreService.setUpdateHandler(this::broadcastUpdates);
 
                 // Updating score of a game
-                bridge.createConsumer("LiveScore/setScore").setMaxBufferedMessages(100).handler(this::setScore);
+                bridge.createConsumer("setScore").setMaxBufferedMessages(100).handler(this::setScore);
 
                 // Getting all scores
-                bridge.createConsumer("LiveScore/getScores").setMaxBufferedMessages(100).handler(this::getScores);
+                bridge.createConsumer("getScores").setMaxBufferedMessages(100).handler(this::getScores);
 
                 // Updating score of a game
-                bridge.createConsumer("LiveScore/addGame").setMaxBufferedMessages(100).handler(this::addGame);
+                bridge.createConsumer("addGame").setMaxBufferedMessages(100).handler(this::addGame);
 
                 fut.complete();
             }
