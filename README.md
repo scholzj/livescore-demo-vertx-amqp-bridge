@@ -7,10 +7,10 @@ This project demonstrates how can AMQP be used as an API for accessing services.
 * receive live score updates
 
 The service is using Apache Qpid Dispatch and Vert.x AMQP Bridge for the AMQP API. Dispatch is used as AMQP server, where AMQP clients can connect. AMQP Bridge in Vert.x connects to it as client and is used to send and receive messages.
-  
+
 ## API
 
-To send a request, send the message to the specific AMQP address. If reply-to address is specified, the service will send response to it. 
+To send a request, send the message to the specific AMQP address. If reply-to address is specified, the service will send response to it.
 
 ### Add new game
 
@@ -20,8 +20,8 @@ To send a request, send the message to the specific AMQP address. If reply-to ad
 * The message payload should be in JSON format:
 ```json
 {
-  "homeTeam": "Aston Villa", 
-  "awayTeam": "Preston North End", 
+  "homeTeam": "Aston Villa",
+  "awayTeam": "Preston North End",
   "startTime": "14th January 2017, 17:30"
 }
 ```
@@ -35,10 +35,10 @@ In case of success:
 ```json
 {
   "awayTeam": "Preston North End",
-  "awayTeamGoals": 0, 
-  "gameTime": "0", 
-  "homeTeam": "Aston Villa", 
-  "homeTeamGoals": 0, 
+  "awayTeamGoals": 0,
+  "gameTime": "0",
+  "homeTeam": "Aston Villa",
+  "homeTeamGoals": 0,
   "startTime": "Saturday 14th January 2017, 17:30"
 }
 ```
@@ -60,10 +60,10 @@ In case of problems:
 * The message payload should be in JSON format:
 ```json
 {
-  "homeTeam": "Aston Villa", 
-  "awayTeam": "Preston North End", 
-  "homeTeamGoals": 1, 
-  "awayTeamGoals": 0, 
+  "homeTeam": "Aston Villa",
+  "awayTeam": "Preston North End",
+  "homeTeamGoals": 1,
+  "awayTeamGoals": 0,
   "gameTime": "HT"
 }
 ```
@@ -77,10 +77,10 @@ In case of success:
 ```json
 {
   "awayTeam": "Preston North End",
-  "awayTeamGoals": 1, 
-  "gameTime": "HT", 
-  "homeTeam": "Aston Villa", 
-  "homeTeamGoals": 0, 
+  "awayTeamGoals": 1,
+  "gameTime": "HT",
+  "homeTeam": "Aston Villa",
+  "homeTeamGoals": 0,
   "startTime": "Saturday 14th January 2017, 17:30"
 }
 ```
@@ -111,10 +111,10 @@ In case of success:
 [
   {
     "awayTeam": "Preston North End",
-    "awayTeamGoals": 1, 
-    "gameTime": "HT", 
-    "homeTeam": "Aston Villa", 
-    "homeTeamGoals": 0, 
+    "awayTeamGoals": 1,
+    "gameTime": "HT",
+    "homeTeam": "Aston Villa",
+    "homeTeamGoals": 0,
     "startTime": "Saturday 14th January 2017, 17:30"
   }
 ]
@@ -134,15 +134,15 @@ In case of success:
 ```json
 {
   "awayTeam": "Preston North End",
-  "awayTeamGoals": 1, 
-  "gameTime": "HT", 
-  "homeTeam": "Aston Villa", 
-  "homeTeamGoals": 0, 
+  "awayTeamGoals": 1,
+  "gameTime": "HT",
+  "homeTeam": "Aston Villa",
+  "homeTeamGoals": 0,
   "startTime": "Saturday 14th January 2017, 17:30"
 }
 ```
 
-## Examples
+### API Examples
 
 You can use the qpid-send and qpid-receive utilities from Apache Qpid project to communicate with the service from the command line:
 
@@ -170,4 +170,13 @@ qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "getSc
 ```bash
 qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "liveUpdates" -f
 
+```
+
+## Kubernetes deployment
+
+The `Kubernetes` directory contains YAML files which can be used for deployment into Kubernetes cluster. Use the `kubectl` utility to deploy it.
+
+```bash
+kubectl create -f config.yaml
+kubectl create -f deployment.yaml
 ```
