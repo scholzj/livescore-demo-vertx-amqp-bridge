@@ -65,6 +65,37 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.6</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <vertx.logger-delegate-factory-class-name>io.vertx.core.logging.SLF4JLogDelegateFactory</vertx.logger-delegate-factory-class-name>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.19</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <dispatch.port>${dispatch.port}</dispatch.port>
+                            <vertx.logger-delegate-factory-class-name>io.vertx.core.logging.SLF4JLogDelegateFactory</vertx.logger-delegate-factory-class-name>
+                            <logback.configurationFile>${project.basedir}/src/test/resources/logback.xml</logback.configurationFile>
+                        </systemPropertyVariables>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>integration-tests</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -117,6 +148,105 @@
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.15.16</version>
+                <configuration>
+                    <logDate>default</logDate>
+                    <autoPull>true</autoPull>
+                    <images>
+                        <image>
+                            <alias>dispatch</alias>
+                            <name>scholzj/qpid-dispatch:0.7.0</name>
+                            <run>
+                                <env>
+                                    <QDROUTERD_CONFIG_OPTIONS>
+                                        router {
+                                            mode: standalone
+                                            id: LiveScoreService
+                                            workerThreads: 4
+                                        }
+
+                                        log {
+                                            module: DEFAULT
+                                            enable: info+
+                                            timestamp: true
+                                        }
+
+                                        listener {
+                                            role: normal
+                                            host: 0.0.0.0
+                                            port: amqp
+                                            saslMechanisms: ANONYMOUS
+                                        }
+
+                                        address {
+                                            prefix: liveUpdates
+                                            distribution: multicast
+                                        }
+
+                                        address {
+                                            prefix: setScore
+                                            distribution: balanced
+                                        }
+
+                                        address {
+                                            prefix: getScore
+                                            distribution: balanced
+                                        }
+
+                                        address {
+                                            prefix: addGame
+                                            distribution: balanced
+                                        }
+                                    </QDROUTERD_CONFIG_OPTIONS>
+                                </env>
+                                <wait>
+                                    <log>Operational, 4 Threads Running</log>
+                                    <time>10000</time>
+                                </wait>
+                                <log>
+                                    <prefix>DISPATCH</prefix>
+                                    <color>yellow</color>
+                                </log>
+                                <ports>
+                                    <port>dispatch.port:5672</port>
+                                </ports>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
