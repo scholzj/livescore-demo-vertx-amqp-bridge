@@ -1,9 +1,11 @@
+[![Build Status](https://travis-ci.org/scholzj/livescore-demo-vertx-amqp-bridge.svg?branch=master)](https://travis-ci.org/scholzj/livescore-demo-vertx-amqp-bridge)
+
 # LiveScore service demo with Vert.x AMQP Bridge and Apache Qpid Dispatch
 
 This project demonstrates how can AMQP be used as an API for accessing services. It has a simple service for keeping live scores. The service allows to:
 * add games
 * update scores
-* reguest score results
+* request score results
 * receive live score updates
 
 The service is using Apache Qpid Dispatch and Vert.x AMQP Bridge for the AMQP API. Dispatch is used as AMQP server, where AMQP clients can connect. AMQP Bridge in Vert.x connects to it as client and is used to send and receive messages.
