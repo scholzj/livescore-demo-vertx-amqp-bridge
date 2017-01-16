@@ -186,22 +186,22 @@
                                         }
 
                                         address {
-                                            prefix: liveUpdates
+                                            prefix: /liveUpdates
                                             distribution: multicast
                                         }
 
                                         address {
-                                            prefix: setScore
+                                            prefix: /setScore
                                             distribution: balanced
                                         }
 
                                         address {
-                                            prefix: getScore
+                                            prefix: /getScore
                                             distribution: balanced
                                         }
 
                                         address {
-                                            prefix: addGame
+                                            prefix: /addGame
                                             distribution: balanced
                                         }
                                     </QDROUTERD_CONFIG_OPTIONS>
