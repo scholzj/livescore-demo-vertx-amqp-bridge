@@ -41,7 +41,7 @@ public class LiveScore extends AbstractVerticle {
                 LOG.info("Connected to the AMQP router");
 
                 // Broadcasting live updates as they occur
-                broadcaster = bridge.createProducer("/liveUpdates");
+                broadcaster = bridge.createProducer("/liveScores");
                 scoreService.setUpdateHandler(this::broadcastUpdates);
 
                 // Updating score of a game

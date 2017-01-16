@@ -18,7 +18,7 @@ To send a request, send the message to the specific AMQP address. If reply-to ad
 
 #### Request
 
-* Send a message to endpoint /addGame
+* Send a message to endpoint `/addGame`
 * The message payload should be in JSON format:
 ```json
 {
@@ -58,7 +58,7 @@ In case of problems:
 
 #### Request
 
-* Send a message to endpoint /setScore
+* Send a message to endpoint `/setScore`
 * The message payload should be in JSON format:
 ```json
 {
@@ -100,7 +100,7 @@ In case of problems:
 
 #### Request
 
-* Send a message to endpoint /getScores
+* Send a message to endpoint `/getScores`
 * The message payload should be empty
 
 #### Response
@@ -126,7 +126,7 @@ In case of success:
 
 #### Subscribe
 
-* To subscribe to live score updates, connect a receiver to /liveUpdates
+* To subscribe to live score updates, connect a receiver to `/liveScores`
 
 #### Broadcasts
 
@@ -170,7 +170,7 @@ qpid-send -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'/get
 
 * Subscribe to live updates
 ```bash
-qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'/liveUpdates'" -f
+qpid-receive -b 127.0.0.1:5672 --connection-options "{protocol: amqp1.0}" -a "'/liveScores'" -f
 
 ```
 

@@ -334,7 +334,7 @@ public class LiveScoreIT {
                         LOG.info("Connection openned");
                         ProtonConnection conn = openRes.result();
 
-                        ProtonReceiver recv = conn.createReceiver("/liveUpdates").handler((delivery, msg) -> {
+                        ProtonReceiver recv = conn.createReceiver("/liveScores").handler((delivery, msg) -> {
                             LOG.info("Received message");
                             Section body = msg.getBody();
                             if (body instanceof AmqpValue) {
@@ -349,7 +349,7 @@ public class LiveScoreIT {
                             }
                         }).open();
 
-                        ProtonReceiver recv2 = conn.createReceiver("/liveUpdates").handler((delivery, msg) -> {
+                        ProtonReceiver recv2 = conn.createReceiver("/liveScores").handler((delivery, msg) -> {
                             LOG.info("Received message");
                             Section body = msg.getBody();
                             if (body instanceof AmqpValue) {

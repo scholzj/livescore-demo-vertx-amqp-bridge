@@ -186,7 +186,7 @@
                                         }
 
                                         address {
-                                            prefix: /liveUpdates
+                                            prefix: /liveScores
                                             distribution: multicast
                                         }
 
