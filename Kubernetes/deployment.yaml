@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - image: scholzj/livescore-demo-vertx-amqp-bridge:latest
-          name: livescore-demo-vertx-amqp-bridgedave
+          name: livescore-demo-vertx-amqp-bridge
           imagePullPolicy: Always
           env:
             - name: LOG_LEVEL
