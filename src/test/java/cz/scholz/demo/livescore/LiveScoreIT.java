@@ -316,6 +316,7 @@ public class LiveScoreIT {
     public void testLiveUpdates(TestContext context)
     {
         final Async asyncLiveUpdate = context.async();
+        final Async asyncLiveUpdate2 = context.async();
 
         deployVerticle(context);
 
@@ -333,8 +334,6 @@ public class LiveScoreIT {
                         LOG.info("Connection openned");
                         ProtonConnection conn = openRes.result();
 
-
-
                         ProtonReceiver recv = conn.createReceiver("/liveUpdates").handler((delivery, msg) -> {
                             LOG.info("Received message");
                             Section body = msg.getBody();
@@ -347,6 +346,21 @@ public class LiveScoreIT {
                                 context.assertEquals(0, payload.getInteger("awayTeamGoals"));
                                 context.assertEquals("0", payload.getString("gameTime"));
                                 asyncLiveUpdate.complete();
+                            }
+                        }).open();
+
+                        ProtonReceiver recv2 = conn.createReceiver("/liveUpdates").handler((delivery, msg) -> {
+                            LOG.info("Received message");
+                            Section body = msg.getBody();
+                            if (body instanceof AmqpValue) {
+                                JsonObject payload = new JsonObject((String) ((AmqpValue) body).getValue().toString());
+                                context.assertEquals("Aston Villa", payload.getString("homeTeam"));
+                                context.assertEquals("Preston North End", payload.getString("awayTeam"));
+                                context.assertEquals("21th January 2017, 16:00", payload.getString("startTime"));
+                                context.assertEquals(0, payload.getInteger("homeTeamGoals"));
+                                context.assertEquals(0, payload.getInteger("awayTeamGoals"));
+                                context.assertEquals("0", payload.getString("gameTime"));
+                                asyncLiveUpdate2.complete();
                             }
                         }).open();
 
@@ -382,6 +396,7 @@ public class LiveScoreIT {
         });
 
         asyncLiveUpdate.awaitSuccess(10000);
+        asyncLiveUpdate2.awaitSuccess(10000);
     }
 
     @After
