@@ -41,17 +41,17 @@ public class LiveScore extends AbstractVerticle {
                 LOG.info("Connected to the AMQP router");
 
                 // Broadcasting live updates as they occur
-                broadcaster = bridge.createProducer("liveUpdates");
+                broadcaster = bridge.createProducer("/liveUpdates");
                 scoreService.setUpdateHandler(this::broadcastUpdates);
 
                 // Updating score of a game
-                bridge.createConsumer("setScore").setMaxBufferedMessages(100).handler(this::setScore);
+                bridge.createConsumer("/setScore").setMaxBufferedMessages(100).handler(this::setScore);
 
                 // Getting all scores
-                bridge.createConsumer("getScores").setMaxBufferedMessages(100).handler(this::getScores);
+                bridge.createConsumer("/getScores").setMaxBufferedMessages(100).handler(this::getScores);
 
                 // Updating score of a game
-                bridge.createConsumer("addGame").setMaxBufferedMessages(100).handler(this::addGame);
+                bridge.createConsumer("/addGame").setMaxBufferedMessages(100).handler(this::addGame);
 
                 fut.complete();
             }
@@ -99,8 +99,8 @@ public class LiveScore extends AbstractVerticle {
 
             if(msg.replyAddress() != null) {
                 JsonObject response = new JsonObject();
-                response.put("application_properties", new JsonObject().put("status", "200"));
-                response.put("body", new JsonObject(Json.encode(game)));
+                response.put("application_properties", new JsonObject().put("status", 200));
+                response.put("body", new JsonObject(Json.encode(game)).encode());
 
                 msg.reply(response);
             }
@@ -109,8 +109,8 @@ public class LiveScore extends AbstractVerticle {
 
             if(msg.replyAddress() != null) {
                 JsonObject response = new JsonObject();
-                response.put("application_properties", new JsonObject().put("status", "400"));
-                response.put("body", new JsonObject().put("error", e.getMessage()));
+                response.put("application_properties", new JsonObject().put("status", 400));
+                response.put("body", new JsonObject().put("error", e.getMessage()).encode());
 
                 msg.reply(response);
             }
@@ -123,8 +123,8 @@ public class LiveScore extends AbstractVerticle {
 
         if(msg.replyAddress() != null) {
             JsonObject response = new JsonObject();
-            response.put("application_properties", new JsonObject().put("status", "200"));
-            response.put("body", new JsonArray(Json.encode(scoreService.getScores())));
+            response.put("application_properties", new JsonObject().put("status", 200));
+            response.put("body", new JsonArray(Json.encode(scoreService.getScores())).encode());
 
             msg.reply(response);
         }
@@ -150,8 +150,8 @@ public class LiveScore extends AbstractVerticle {
 
             if(msg.replyAddress() != null) {
                 JsonObject response = new JsonObject();
-                response.put("application_properties", new JsonObject().put("status", "400"));
-                response.put("body", new JsonObject().put("error", "Failed to decode message with body type " + msgBody.getString("body_type")));
+                response.put("application_properties", new JsonObject().put("status", 400));
+                response.put("body", new JsonObject().put("error", "Failed to decode message with body type " + msgBody.getString("body_type")).encode());
 
                 msg.reply(response);
             }
@@ -168,8 +168,8 @@ public class LiveScore extends AbstractVerticle {
 
             if(msg.replyAddress() != null) {
                 JsonObject response = new JsonObject();
-                response.put("application_properties", new JsonObject().put("status", "201"));
-                response.put("body", new JsonObject(Json.encode(game)));
+                response.put("application_properties", new JsonObject().put("status", 201));
+                response.put("body", new JsonObject(Json.encode(game)).encode());
 
                 msg.reply(response);
             }
@@ -178,8 +178,8 @@ public class LiveScore extends AbstractVerticle {
 
             if(msg.replyAddress() != null) {
                 JsonObject response = new JsonObject();
-                response.put("application_properties", new JsonObject().put("status", "400"));
-                response.put("body", new JsonObject().put("error", e.getMessage()));
+                response.put("application_properties", new JsonObject().put("status", 400));
+                response.put("body", new JsonObject().put("error", e.getMessage()).encode());
 
                 msg.reply(response);
             }
@@ -190,7 +190,7 @@ public class LiveScore extends AbstractVerticle {
     {
         LOG.info("Broadcasting game update " + game);
         JsonObject message = new JsonObject();
-        message.put("body", new JsonObject(Json.encode(game)));
+        message.put("body", new JsonObject(Json.encode(game)).encode());
         broadcaster.send(message);
     }
 
