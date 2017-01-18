@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copy the binaries
-cp -r -v ./target/livescore-demo-vertx-amqp-bridge-1.0-SNAPSHOT/vertx-amqp-bridge-1.0-SNAPSHOT ./Dockerfile/livescore-demo-vertx-amqp-bridge-1.0-SNAPSHOT
+cp -r -v ./target/livescore-demo-vertx-amqp-bridge-1.0-SNAPSHOT/livescore-demo-vertx-amqp-bridge-1.0-SNAPSHOT ./Dockerfile/livescore-demo-vertx-amqp-bridge-1.0-SNAPSHOT
 
 docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 docker build -t scholzj/livescore-demo-vertx-amqp-bridge:${TRAVIS_COMMIT} ./Dockerfile/
