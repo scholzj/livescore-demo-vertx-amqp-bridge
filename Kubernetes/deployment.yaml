@@ -50,9 +50,6 @@ spec:
                 configMapKeyRef:
                   name: livescore-demo-vertx-amqp-bridge-config
                   key: dispatch.config
-
           ports:
-            - containerPort: 8080
-              name: http
-            - containerPort: 8181
-              name: https
+            - containerPort: 5672
+              name: amqp
